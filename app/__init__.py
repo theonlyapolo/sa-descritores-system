@@ -12,3 +12,4 @@ def create_app(config_object=Config):
     @app.errorhandler(404)
     def not_found(error): return jsonify({"message":"Recurso não encontrado."}), 404
     return app
+    return app

@@ -44,3 +44,32 @@ Todos os recursos ficam sob `/api/v1`.
 ## Segurança e escopo PCA
 
 O controle RBAC separa Administrador e PCA. Administradores possuem acesso total. PCAs só podem alterar aplicações de descritores pertencentes simultaneamente à própria área de conhecimento e ao próprio turno.
+
+## Solução de conflitos no GitHub
+
+Se aparecer um erro como `NameError: name 'codex' is not defined` em `app/extensions.py`, o arquivo ficou com texto de conflito do Git dentro do código. Remova qualquer linha parecida com nome de branch (`codex/...`) e qualquer marcador `<<<<<<<`, `=======` ou `>>>>>>>`.
+
+A versão correta de `app/extensions.py` é:
+
+```python
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
+from flask_smorest import Api
+from flask_cors import CORS
+
+db = SQLAlchemy()
+migrate = Migrate()
+jwt = JWTManager()
+smorest_api = Api()
+cors = CORS()
+```
+
+A versão correta de `app/__init__.py` deve importar e usar `smorest_api`, não `api`:
+
+```python
+from app.extensions import db, migrate, jwt, smorest_api, cors
+# ...
+smorest_api.init_app(app)
+register_blueprints(smorest_api)
+```
