@@ -7,5 +7,6 @@ from flask_cors import CORS
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
-api = Api()
+codex/desenvolver-api-rest-para-gestao-pedagogica-f1yib9
+smorest_api = Api()
 cors = CORS()

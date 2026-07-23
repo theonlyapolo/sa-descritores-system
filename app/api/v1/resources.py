@@ -11,7 +11,7 @@ from app.utils.security import current_user, roles_required
 blp = Blueprint("resources", __name__, url_prefix="/api/v1", description="Recursos administrativos e operacionais")
 
 def crud(model, schema, route, admin_only=True):
-    @blp.route(route)
+    @blp.route(route, endpoint=f"{model.__name__.lower()}_collection")
     class Collection(MethodView):
         @jwt_required()
         @blp.response(200, schema(many=True))
@@ -23,7 +23,7 @@ def crud(model, schema, route, admin_only=True):
             obj = model(**data)
             if isinstance(obj, User) and data.get("password"): obj.set_password(data["password"])
             db.session.add(obj); db.session.commit(); return obj
-    @blp.route(f"{route}/<int:item_id>")
+    @blp.route(f"{route}/<int:item_id>", endpoint=f"{model.__name__.lower()}_item")
     class Item(MethodView):
         @jwt_required()
         @blp.response(200, schema)
